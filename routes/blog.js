@@ -53,9 +53,27 @@ router.get("/new-post", async function (req, res) {
 });
 
 router.get("/posts/:id", async function (req, res) {
-    const id = req.params;
-    const details = await db.getDb().collection("posts").findOne({ _id: new ObjectId(id)}, {summary: 1});   
+    const postId = req.params.id;
+    const details = await db.getDb().collection("posts").findOne({ _id: new ObjectId(postId)}, {summary: 1});   
     res.render("post-detail", {details: details}); 
+});
+
+router.get("/posts/:id/edit", async function(req, res) {
+    const postId = req.params.id;
+    const details = await db.getDb().collection("posts").findOne({_id: new ObjectId(postId)});
+    res.render("update-post", { details: details});
+});
+
+router.post("/posts/:id/edit", async function (req, res) {
+    const postId = new ObjectId(req.params.id);  
+    const content = await db.getDb().collection("posts").updateOne({_id: postId}, { $set: {
+        title: req.body.title,
+        summary: req.body.summary,
+        body: req.body.content
+    }});
+    
+    res.redirect("/posts-list");    
+   
 });
 
 module.exports = router;
