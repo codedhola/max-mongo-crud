@@ -25,6 +25,5 @@ app.use(function (error, req, res, next) {
 
 // Only Listen if database is connected
 db.connectToDatabase().then(function () {
-    console.log("Running database instance and connection was successful");
     app.listen(3000);
 });
